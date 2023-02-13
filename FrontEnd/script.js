@@ -3,12 +3,12 @@ let apiWorks = "http://localhost:5678/api/works";
 fetch(apiWorks).then((response) =>
   response.json().then((data) => {
     console.log(data);
-    let affichage = "<div>";
+    let affichage = "";
     for (let image of data) {
-      affichage += `<figure> <img src= "${image.imageUrl}"</img></figure>`;
-      affichage += ` <figcaption>${image.title}</figcaption> `;
+      affichage += `<figure><img src= "${image.imageUrl}"</img>`;
+      affichage += ` <figcaption>${image.title}</figcaption>
+      </figure> `;
     }
-    affichage += "</div>";
     document.querySelector(".gallery").innerHTML = affichage;
   })
 );
