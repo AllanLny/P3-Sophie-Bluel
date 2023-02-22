@@ -94,8 +94,12 @@ nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
 }
+li>a {
+	text-decoration: none;
+	color: #000;
+}
 
-li:hover {
+li:hover,li>a:hover {
 	color: #B1663C;
 }
 #introduction {
@@ -186,7 +190,7 @@ footer nav ul {
 	margin: 2em
 }
 
-.filterbar{
+.filters{
 	display: flex;
 	justify-content: center;
 	font-family: 'Syne';
@@ -206,7 +210,8 @@ footer nav ul {
 	background-color: transparent;
 	cursor: pointer;
 }
-.filter:hover,.filter:focus {
-	background-color: #1D6154;
-	color: #FFFFFF;
+
+.active_filter {
+    background-color: #1d6154;
+    color: #fff;
 }
