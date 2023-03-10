@@ -47,6 +47,7 @@ const closeTriggers = document.querySelector(".fa-solid.fa-xmark.modal_closing_i
 const modalAddingTriggers = document.querySelector("#modaldelete>input")
 const returnTriggers = document.querySelector(".fa-solid.fa-arrow-left-long.previous_icon")
 const closeTriggers2 = document.querySelector("#modaladding>.fa-solid.fa-xmark.modal_closing_icon")
+
 // OUVERTURE/FERMETURE MODALES //
 modalTriggers.addEventListener("click", OpenModal);
 
@@ -116,4 +117,24 @@ const createModalCard = (project) => {
   editCard.append(image);
   editCard.append(description);
 };
+// ajout de l'image chargée dans l'AddingModal //
+const imageUpload = document.getElementById("image_upload");
+const uploadContainer = document.querySelector(".uploadcontainer");
+const previewImage = document.querySelector(".image_preview");
+const LabelUpload = uploadContainer.querySelector("label");
+
+imageUpload.addEventListener("change", function () {
+  const file = this.files[0];
+  if (file) {
+    const reader = new FileReader();
+    previewImage.style.display = "block";
+
+    reader.addEventListener("load", function () {
+      LabelUpload.style.visibility = "hidden";
+      previewImage.setAttribute("src", this.result);
+    });
+    reader.readAsDataURL(file);
+  }
+});
+
 

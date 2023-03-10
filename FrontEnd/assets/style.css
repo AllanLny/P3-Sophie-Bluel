@@ -31,6 +31,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+	background-color: #FFFEF8;
 }
 ol, ul {
 	list-style: none;
@@ -420,6 +421,12 @@ padding: 0.5%;
 }
 #image_upload{
 	display: none;
+}
+.image_preview{
+	display: none;
+	position: absolute;
+	width: 20.7%;
+	margin-left: 23%;
 }
 .uploadcontainer>label{
 	color: #306685;

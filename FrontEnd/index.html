@@ -86,7 +86,9 @@
 			<h3>Ajout photo</h3>
 			<form>
 				<div class="uploadcontainer">
-					<div class="image"></div>
+					<div id="image" src="#">
+						<img src="" alt="Image Preview" class="image_preview">
+					</div>
 					<i class="fa-regular fa-image"></i>
 					<input type="file" id="image_upload" accept=".png, .jpg">
 					<label for="image_upload">+ Ajouter photo</label>
@@ -95,7 +97,7 @@
 					</div>
 				</div>
 				<div class="TitleImageInput">
-					<label for="Titleinput">Titre</label>
+					<label class= "label" for="Titleinput">Titre</label>
 					<input type="text" name="title" id="Titleinput">
 				</div>
 				<div class="CategoryImageInput">
