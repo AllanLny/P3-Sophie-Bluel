@@ -494,3 +494,7 @@ border: 1px solid rgba(0, 0, 0, 0.3);
 	padding-top: 1.7%;
 	padding-bottom: 1.7%;
 }
+#modal_form_validation.active_button {
+	background: #1D6154;
+	border:#1D6154 ;
+}

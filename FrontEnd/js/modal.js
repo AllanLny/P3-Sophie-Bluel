@@ -117,7 +117,7 @@ const createModalCard = (project) => {
   editCard.append(image);
   editCard.append(description);
 };
-// ajout de l'image chargée dans l'AddingModal //
+// Ajout de l'image chargée dans l'AddingModal //
 const imageUpload = document.getElementById("image_upload");
 const uploadContainer = document.querySelector(".uploadcontainer");
 const previewImage = document.querySelector(".image_preview");
@@ -137,4 +137,10 @@ imageUpload.addEventListener("change", function () {
   }
 });
 
+// Modification du style du submit quand formulaire remplit //
+const submitBtn = document.getElementById("modal_form_validation");
+const FormModalAdding = modalAdding.querySelector("form");
+FormModalAdding.addEventListener("input", function () {
+  submitBtn.setAttribute("class", "active_button");
+});
 
