@@ -353,6 +353,7 @@ footer nav ul {
 #modaldelete>.buttonsupression{
 	text-align: center;
 	color: #D65353;
+	cursor: pointer;
 ;
 }
 #modaldelete>input{

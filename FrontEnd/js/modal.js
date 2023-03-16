@@ -21,7 +21,7 @@ const createEditingButton = (id) => {
   editingButton.innerHTML = `<i class="fa-regular fa-pen-to-square"></i>
   <p>modifier</p>`;
 };
-
+// Insertion si admin //
 if (localStorage.token) {
   createBannner();
   body.insertBefore(editingBanner, header);
@@ -35,6 +35,11 @@ if (localStorage.token) {
   const filters = document.querySelector("#portfolio>h2");
   filters.append(editingButton);
 }
+// Déconnexion en quittant la page //
+function removeToken() {
+  localStorage.removeItem("token");
+}
+window.addEventListener("unload", removeToken);
 
 // MODALES //
 const modalAdding = document.querySelector("#modaladding");
@@ -110,9 +115,29 @@ const createModalCard = (project) => {
   image.alt = project.title;
   const description = document.createElement("figcaption");
   description.innerHTML = `<p class="editing_trigger">éditer</p>
-      <i class="fa-solid fa-trash-can"></i>`;
+  <button
+      <i class="fa-solid fa-trash-can"></i>
+  </button`;
+  description.setAttribute("id", "deleteBtn");
+  // Supprimer un projet ciblé //
+  description.addEventListener('click', function () {
+    fetch(`http://localhost:5678/api/works/${project.id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    })
+      .then(response => {
+        if (response.ok) {
+          console.log(project.id)
+          alert("Projet supprimé avec succès !");
+        }
+      });
+  });
 
-  // Insertion des cards et de leur contenu dans le document
+
+
+  // Insertion des cards et de leur contenu dans le document //
   modalDeleteContent.append(editCard);
   editCard.append(image);
   editCard.append(description);
@@ -142,5 +167,35 @@ const submitBtn = document.getElementById("modal_form_validation");
 const FormModalAdding = modalAdding.querySelector("form");
 FormModalAdding.addEventListener("input", function () {
   submitBtn.setAttribute("class", "active_button");
+});
+
+// Ajout works dans l'api//
+submitBtn.addEventListener("click", function () {
+  const title = document.querySelector('#TitleImageInput input').value;
+  const image = imageUpload.files[0];
+  const categoryElements = document.querySelector('#category_input').value.split(',');
+  const categoryId = parseInt(categoryElements[0]);
+  const categoryName = categoryElements[1];
+
+  const formData = new FormData();
+
+  formData.append('title', title);
+  formData.append('image', image);
+  formData.append('category', categoryId);
+
+  fetch('http://localhost:5678/api/works', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${localStorage.token}`,
+    },
+    body: formData,
+  })
+    .then(function (response) {
+      if (response.ok) {
+        alert('Nouveau projet envoyé avec succès !');
+      } else {
+        alert('Erreur lors de la lecture des informations.')
+      }
+    })
 });
 
