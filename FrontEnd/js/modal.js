@@ -135,8 +135,6 @@ const createModalCard = (project) => {
       });
   });
 
-
-
   // Insertion des cards et de leur contenu dans le document //
   modalDeleteContent.append(editCard);
   editCard.append(image);
@@ -170,32 +168,32 @@ FormModalAdding.addEventListener("input", function () {
 });
 
 // Ajout works dans l'api//
-submitBtn.addEventListener("click", function () {
-  const title = document.querySelector('#TitleImageInput input').value;
-  const image = imageUpload.files[0];
-  const categoryElements = document.querySelector('#category_input').value.split(',');
-  const categoryId = parseInt(categoryElements[0]);
-  const categoryName = categoryElements[1];
+const inputFile = document.getElementById("image_upload");
+const titre = document.getElementById("Titleinput");
+const select = document.getElementById("category_input");
+const formModale = document.querySelector(".formModale");
+
+formModale.addEventListener("submit", (event) => {
+  event.preventDefault();
 
   const formData = new FormData();
+  formData.append("image", inputFile.files[0]);
+  formData.append("title", titre.value);
+  formData.append("category", select.value);
 
-  formData.append('title', title);
-  formData.append('image', image);
-  formData.append('category', categoryId);
-
-  fetch('http://localhost:5678/api/works', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${localStorage.token}`,
-    },
+  fetch("http://localhost:5678/api/works", {
+    method: "POST",
     body: formData,
-  })
-    .then(function (response) {
-      if (response.ok) {
-        alert('Nouveau projet envoyé avec succès !');
-      } else {
-        alert('Erreur lors de la lecture des informations.')
-      }
-    })
+    headers: {
+      Authorization: `Bearer ${localStorage.token}`
+      ,
+    },
+  }).then((reponse) => {
+    if (reponse.ok) {
+      alert("Nouveau projet ajouté !")
+      return reponse.json();
+    } else {
+      alert("Formulaire incomplet !");
+    }
+  });
 });
-
