@@ -120,7 +120,7 @@ const createModalCard = (project) => {
   </button`;
   description.setAttribute("id", "deleteBtn");
   // Supprimer un projet ciblé //
-  description.addEventListener('click', function () {
+  description.addEventListener('click', (e) => {
     fetch(`http://localhost:5678/api/works/${project.id}`, {
       method: 'DELETE',
       headers: {
@@ -133,13 +133,21 @@ const createModalCard = (project) => {
           alert("Projet supprimé avec succès !");
         }
       });
+    e.preventDefault();
+    project.preventDefault();
   });
-
   // Insertion des cards et de leur contenu dans le document //
   modalDeleteContent.append(editCard);
   editCard.append(image);
   editCard.append(description);
 };
+
+// Modification du style du submit quand formulaire remplit //
+const submitBtn = document.getElementById("modal_form_validation");
+const FormModalAdding = modalAdding.querySelector("form");
+FormModalAdding.addEventListener("input", function () {
+  submitBtn.setAttribute("class", "active_button");
+});
 // Ajout de l'image chargée dans l'AddingModal //
 const imageUpload = document.getElementById("image_upload");
 const uploadContainer = document.querySelector(".uploadcontainer");
@@ -160,13 +168,6 @@ imageUpload.addEventListener("change", function () {
   }
 });
 
-// Modification du style du submit quand formulaire remplit //
-const submitBtn = document.getElementById("modal_form_validation");
-const FormModalAdding = modalAdding.querySelector("form");
-FormModalAdding.addEventListener("input", function () {
-  submitBtn.setAttribute("class", "active_button");
-});
-
 // Ajout works dans l'api//
 const inputFile = document.getElementById("image_upload");
 const titre = document.getElementById("Titleinput");
@@ -174,8 +175,6 @@ const select = document.getElementById("category_input");
 const formModale = document.querySelector(".formModale");
 
 formModale.addEventListener("submit", (event) => {
-  event.preventDefault();
-
   const formData = new FormData();
   formData.append("image", inputFile.files[0]);
   formData.append("title", titre.value);
@@ -191,9 +190,9 @@ formModale.addEventListener("submit", (event) => {
   }).then((reponse) => {
     if (reponse.ok) {
       alert("Nouveau projet ajouté !")
-      return reponse.json();
     } else {
       alert("Formulaire incomplet !");
     }
   });
+  event.preventDefault();
 });
