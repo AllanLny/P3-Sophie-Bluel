@@ -57,6 +57,7 @@ const closeTriggers2 = document.querySelector("#modaladding>.fa-solid.fa-xmark.m
 modalTriggers.addEventListener("click", OpenModal);
 
 function OpenModal() {
+  createModalCard()
   modalContainer.classList.add("active")
   modalDelete.classList.toggle("active")
 };
@@ -65,6 +66,7 @@ overlay.addEventListener("click", CloseModalOverlay);
 closeTriggers.addEventListener("click", CloseModalOverlay);
 
 function CloseModalOverlay() {
+  removeGalleryPreview();
   modalContainer.classList.remove("active")
   modalDelete.classList.remove("active")
   modalAdding.classList.remove("active")
@@ -76,11 +78,13 @@ function OpenModalAdding() {
   modalDelete.classList.remove("active")
   modalContainer.classList.add("active")
   modalAdding.classList.toggle("active")
+  removeGalleryPreview();
 }
 
 returnTriggers.addEventListener("click", returnModalDelete);
 
 function returnModalDelete() {
+  createModalCard()
   modalAdding.classList.remove("active")
   modalContainer.classList.add("active")
   modalDelete.classList.toggle("active")
@@ -88,59 +92,57 @@ function returnModalDelete() {
 
 closeTriggers2.addEventListener("click", CloseModalOverlay);
 
-fetch(apiWorks + "works")
-  .then((response) => {
-    if (response.ok) {
-      return response.json();
-    }
-  })
-  .then((projects) => {
-    getAllProjects(projects, createModalCard);
-
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
-// Fonction de création des cartes de la modale
-const createModalCard = (project) => {
-  //Création de la card
-  const editCard = document.createElement("figure");
-  editCard.classList.add("edit_Card");
-  editCard.dataset.id = project.id;
-  //Insertion de l'image et de la description
-  const image = document.createElement("img");
-  image.crossOrigin = "anonymous";
-  image.src = project.imageUrl;
-  image.alt = project.title;
-  const description = document.createElement("figcaption");
-  description.innerHTML = `<p class="editing_trigger">éditer</p>
-  <button
-      <i class="fa-solid fa-trash-can"></i>
-  </button`;
-  description.setAttribute("id", "deleteBtn");
-  // Supprimer un projet ciblé //
-  description.addEventListener('click', (e) => {
-    fetch(`http://localhost:5678/api/works/${project.id}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${localStorage.token}`,
-      },
+function createModalCard() {
+  fetch(apiWorks + "works")
+    .then((reponse) => {
+      if (reponse.ok) {
+        return reponse.json();
+      } else {
+        throw new Error("echec lors de l'appel API.");
+      }
     })
-      .then(response => {
-        if (response.ok) {
-          console.log(project.id)
-          alert("Projet supprimé avec succès !");
-        }
+    .then((data) => {
+      data.forEach((element) => {
+        const editCard = document.createElement("figure");
+        editCard.className = "edit_Card";
+        const image = document.createElement("img");
+        image.src = element.imageUrl;
+        const description = document.createElement("figcaption");
+        description.innerHTML = `<p class="editing_trigger">éditer</p>
+      <button
+       <i class="fa-solid fa-trash-can"></i>
+     </button`;
+        description.setAttribute("id", "deleteBtn");
+        // Supprimer un projet ciblé //
+        description.addEventListener('click', (e) => {
+          fetch(`http://localhost:5678/api/works/${element.id}`, {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Bearer ${localStorage.token}`,
+            },
+          })
+            .then(response => {
+              if (response.ok) {
+                editCard.remove();
+                removeGalleryScript();
+                createScriptCard();
+                alert("Projet supprimé avec succès !");
+              }
+            });
+        });
+        modalDeleteContent.append(editCard);
+        editCard.append(image);
+        editCard.append(description);
       });
-    e.preventDefault();
-    project.preventDefault();
+    });
+}
+// supprimer galleryPreview
+function removeGalleryPreview() {
+  const galleryPreviewList = modalDeleteContent.querySelectorAll(".edit_Card");
+  galleryPreviewList.forEach(function (editCard) {
+    editCard.remove();
   });
-  // Insertion des cards et de leur contenu dans le document //
-  modalDeleteContent.append(editCard);
-  editCard.append(image);
-  editCard.append(description);
-};
+}
 
 // Modification du style du submit quand formulaire remplit //
 const submitBtn = document.getElementById("modal_form_validation");
@@ -174,7 +176,10 @@ const titre = document.getElementById("Titleinput");
 const select = document.getElementById("category_input");
 const formModale = document.querySelector(".formModale");
 
+
 formModale.addEventListener("submit", (event) => {
+  event.preventDefault();
+
   const formData = new FormData();
   formData.append("image", inputFile.files[0]);
   formData.append("title", titre.value);
@@ -184,15 +189,16 @@ formModale.addEventListener("submit", (event) => {
     method: "POST",
     body: formData,
     headers: {
-      Authorization: `Bearer ${localStorage.token}`
-      ,
+      Authorization: `Bearer ${localStorage.token}`,
     },
   }).then((reponse) => {
     if (reponse.ok) {
-      alert("Nouveau projet ajouté !")
+      alert("Projet ajouté avec succès !");
+      removeGalleryScript();
+      createScriptCard();
+      return reponse.json();
     } else {
-      alert("Formulaire incomplet !");
+      throw new Error("echec lors de l'appel API.");
     }
   });
-  event.preventDefault();
 });
