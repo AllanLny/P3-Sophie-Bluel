@@ -196,9 +196,8 @@ formModale.addEventListener("submit", (event) => {
       alert("Projet ajouté avec succès !");
       removeGalleryScript();
       createScriptCard();
-      return reponse.json();
     } else {
-      throw new Error("echec lors de l'appel API.");
+      alert("Le formulaire est incomplet!");
     }
   });
 });
